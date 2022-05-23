@@ -1,11 +1,13 @@
 import React from "react";
-import { Link, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useSearchParams } from "react-router-dom";
 import { getInvoices } from "../data";
+import QueryNavLink from "./queryNavLink";
 
 type Props = {};
 
-const invoices = (props: Props) => {
-  let invoices = getInvoices();
+const Invoices = (props: Props) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const invoices = getInvoices();
   return (
     <div style={{ display: "flex" }}>
       <nav
@@ -14,17 +16,39 @@ const invoices = (props: Props) => {
           padding: "1rem",
         }}
       >
-        {invoices.map((invoice) => {
-          return (
-            <Link style={{ display: "block", margin: "1rem 0" }} to={`/invoices/${invoice.number}`} key={invoice.name}>
-              {invoice.name}
-            </Link>
-          );
-        })}
+        <input
+          value={searchParams.get("filter") || ""}
+          onChange={(event) => {
+            const filter = event.target.value;
+            if (filter) {
+              setSearchParams({ filter });
+            } else {
+              setSearchParams({});
+            }
+          }}
+        />
+        {invoices
+          .filter((invoice) => {
+            let filter = searchParams.get("filter");
+            if (!filter) return true;
+            let name = invoice.name.toLowerCase();
+            return name.startsWith(filter.toLowerCase());
+          })
+          .map((invoice) => {
+            return (
+              <QueryNavLink
+                style={({ isActive }) => ({ display: "block", margin: "1rem 0", color: isActive ? "red" : "" })}
+                to={`/invoices/${invoice.number}`}
+                key={invoice.name}
+              >
+                {invoice.name}
+              </QueryNavLink>
+            );
+          })}
       </nav>
-      <Outlet/>
+      <Outlet />
     </div>
   );
 };
 
-export default invoices;
+export default Invoices;
