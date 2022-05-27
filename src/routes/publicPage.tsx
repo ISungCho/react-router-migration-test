@@ -1,10 +1,10 @@
 import React from "react";
 import { Outlet, Link } from "react-router-dom";
-import AuthStatus from "./auth/authStatus";
+import AuthStatus from "../auth/authStatus";
 
-function App() {
+function PublicPage() {
   return (
-    <div className="App">
+    <div>
       <h1>Bookkeeper!</h1>
       <AuthStatus />
       <nav
@@ -20,4 +20,4 @@ function App() {
   );
 }
 
-export default App;
+export default PublicPage;

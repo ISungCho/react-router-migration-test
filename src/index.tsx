@@ -7,34 +7,50 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Expenses from "./routes/expenses";
 import Invoices from "./routes/invoices";
 import Invoice from "./routes/invoice";
+import Login from "./routes/login";
+import ProtectedPage from "./routes/protectedPage";
+import PublicPage from "./routes/publicPage";
+import AuthProvider from "./auth/authProvider";
+import RequireAuth from "./auth/requireAuth";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
   <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<App />}>
-        <Route path="/expenses" element={<Expenses />}></Route>
-        <Route path="/invoices" element={<Invoices />}>
+    <AuthProvider>
+      <Routes>
+        <Route path="/" element={<PublicPage />}>
+          <Route path="/expenses" element={<Expenses />}></Route>
+          <Route path="/invoices" element={<Invoices />}>
+            <Route
+              index
+              element={
+                <main style={{ padding: "1rem" }}>
+                  <p>Select an invoice</p>
+                </main>
+              }
+            ></Route>
+            <Route path=":invoiceId" element={<Invoice />}></Route>
+          </Route>
           <Route
-            index
+            path="*"
             element={
               <main style={{ padding: "1rem" }}>
-                <p>Select an invoice</p>
+                <p>There is nothing here!</p>
               </main>
             }
           ></Route>
-          <Route path=":invoiceId" element={<Invoice />}></Route>
         </Route>
+        <Route path="/login" element={<Login />} />
         <Route
-          path="*"
+          path="/protected"
           element={
-            <main style={{ padding: "1rem" }}>
-              <p>There is nothing here!</p>
-            </main>
+            <RequireAuth>
+              <ProtectedPage />
+            </RequireAuth>
           }
-        ></Route>
-      </Route>
-    </Routes>
+        />
+      </Routes>
+    </AuthProvider>
   </BrowserRouter>
 );
 
