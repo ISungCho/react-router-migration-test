@@ -13,6 +13,8 @@ import PublicPage from "./routes/publicPage";
 import AuthProvider from "./auth/authProvider";
 import RequireAuth from "./auth/requireAuth";
 
+// 참고 링크
+// https://stackblitz.com/github/remix-run/react-router/tree/main/examples/auth?file=src%2FApp.tsx,src%2Fauth.ts
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
   <BrowserRouter>
